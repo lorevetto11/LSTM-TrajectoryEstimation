@@ -8,6 +8,7 @@ import glob
 import matplotlib.pyplot as plt
 from Interpolation import interpolation
 from Dataset_Extract.Dataset import Dataset
+from Predict import predict
 
 Method = 5
 
@@ -24,6 +25,7 @@ X, Y = [], []
 if __name__ == '__main__':
 
     dataset = Dataset()
+    predict = predict.Predict()
 
     if(ideal_line):
         dataset.extract_F1_dataset_idealline()
@@ -66,13 +68,13 @@ if __name__ == '__main__':
         print(model.summary(90))
 
     else:
-        model = load_model('demo.h5')
+        predict.test_predict_trajectory_OneArray()
 
     #for f, g in zip(X, Y):
         #model.fit(f, g, epochs=100, validation_split=0.1, verbose=1)
         
     
-    #model.save('demo.h5')      
+    #model.save('Model/demo.h5')      
     '''
     for a, b in zip(X, Y):
         for f, g in zip(a, b):
@@ -80,8 +82,9 @@ if __name__ == '__main__':
             model.save('my_model.h5')  #creates a HDF5 file 'my_model.h5'    
             model = load_model('my_model.h5')
     '''
+    '''
 
-    csv_data_temp = np.loadtxt('Test/Berlin_track.csv', comments='#', delimiter=',')
+    csv_data_temp = np.loadtxt('Predict/Track/Berlin_track.csv', comments='#', delimiter=',')
 
     
     mod = int(len(csv_data_temp)/10)
@@ -110,6 +113,8 @@ if __name__ == '__main__':
         print(test_output)
     '''
 
+    '''
+
     for i in range(0, len(x1_test)):
         test_track.append(np.column_stack((x1_test[i], y1_test[i], x2_test[i], y2_test[i])))
  
@@ -135,11 +140,14 @@ if __name__ == '__main__':
         plt.plot(x2_test, y2_test, "gs")
         plt.plot(output[:, 0], output[:, 1], "rs")
         plt.show()
+    '''
         
     '''
+    
     plt.plot(x1_test, y1_test, "bs", linewidth=0.01)
     plt.plot(x2_test, y2_test, "gs", linewidth=0.01)
 
  
     plt.plot(xx, yy, "rs", linewidth=0.01)
     plt.show()
+    '''
