@@ -17,7 +17,7 @@ class Predict:
 
     def test_predict_trajectory_OneArray(self):
 
-        model = load_model('Model/LSTM/Saved/OneLayer.h5')
+        model = load_model('Model/GRU/Saved/MultiLayer.h5')
 
         csv_data_temp = np.loadtxt('Predict/Track/Berlin_track.csv', comments='#', delimiter=',')
     

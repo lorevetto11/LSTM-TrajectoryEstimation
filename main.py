@@ -59,7 +59,7 @@ if __name__ == '__main__':
             start = time.time()
             predict.test_predict_trajectory_OneArray()
             end = time.time()
-            with open("Timing/LSTM/OneLayer.txt", 'a') as f:
+            with open("Timing/GRU/AllTrack/MultiLayer.txt", 'a') as f:
                 f.write(str(end - start) + "\n")
 
     elif(Method == 3):
