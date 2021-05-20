@@ -5,12 +5,14 @@ import numpy as np
 import random 
 import sys
 import glob
-import matplotlib.pyplot as plt
+
 from Interpolation import interpolation
 from Dataset_Extract.Dataset import Dataset
 from Predict import predict
+from Model.LSTM.TrainModel.LSTM_Model import LSTM_Model
+from Model.GRU.TrainModel.GRU_Model import GRU_Model
 
-Method = 5
+Method = 4
 
 ideal_line = False
 
@@ -25,7 +27,11 @@ X, Y = [], []
 if __name__ == '__main__':
 
     dataset = Dataset()
+    
     predict = predict.Predict()
+
+    lstm_mod = LSTM_Model()
+    gru_mod = GRU_Model()
 
     if(ideal_line):
         dataset.extract_F1_dataset_idealline()
@@ -42,46 +48,25 @@ if __name__ == '__main__':
 
 
     if(Method == 1):
-        model = keras.models.Sequential()
-        model.add(layers.LSTM(128, input_shape=(10, 4)))
-        model.add(layers.Dense(2, activation='softmax'))
-        optimizer = keras.optimizers.RMSprop(lr=0.01)
-        model.compile(loss='categorical_crossentropy', optimizer=optimizer)
+        lstm_mod.train_model_basic(X, Y)
+        predict.test_predict_trajectory_OneArray()
 
-        print(model.summary(90))
 
     elif(Method == 2):
-        model = keras.models.Sequential()
-        model.add(layers.LSTM(128, activation='relu', input_shape=(1, 4)))
-        model.add(layers.Dense(2))
-        model.compile(optimizer='adam', loss='mse')
-
-        print(model.summary(90))
+        lstm_mod.train_model_one_array(X, Y)
+        predict.test_predict_trajectory_OneArray()
 
     elif(Method == 3):
-        model = keras.models.Sequential()
-        model.add(layers.LSTM(64, activation='relu', input_shape=(10, 4), return_sequences=True))
-        model.add(layers.LSTM(64, activation='relu', input_shape=(10, 4)))
-        model.add(layers.Dense(2))
-        model.compile(optimizer='adam', loss='mse')
+        lstm_mod.train_model_multi_layer(X, Y)
+        predict.test_predict_trajectory_OneArray()
 
-        print(model.summary(90))
+    elif(Method == 4):
+        gru_mod.train_model_one_array(X, Y)
+        predict.test_predict_trajectory_OneArray()
 
     else:
         predict.test_predict_trajectory_OneArray()
 
-    #for f, g in zip(X, Y):
-        #model.fit(f, g, epochs=100, validation_split=0.1, verbose=1)
-        
-    
-    #model.save('Model/demo.h5')      
-    '''
-    for a, b in zip(X, Y):
-        for f, g in zip(a, b):
-            model.fit(f, g, epochs=300, validation_split=0.1, verbose=1)
-            model.save('my_model.h5')  #creates a HDF5 file 'my_model.h5'    
-            model = load_model('my_model.h5')
-    '''
     '''
 
     csv_data_temp = np.loadtxt('Predict/Track/Berlin_track.csv', comments='#', delimiter=',')
