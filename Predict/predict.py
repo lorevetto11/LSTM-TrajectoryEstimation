@@ -17,7 +17,7 @@ class Predict:
 
     def test_predict_trajectory_OneArray(self):
 
-        model = load_model('Model/GRU/Saved/OneLayer.h5')
+        model = load_model('Model/LSTM/Saved/OneLayer.h5')
 
         csv_data_temp = np.loadtxt('Predict/Track/Berlin_track.csv', comments='#', delimiter=',')
     
@@ -41,4 +41,4 @@ class Predict:
             self.x.append(test_output[0][0])
             self.y.append(test_output[0][1])
 
-        self.plotter.plot(self.x1_test, self.y1_test, self.x2_test, self.y2_test, self.x, self.y)
+        #self.plotter.plot(self.x1_test, self.y1_test, self.x2_test, self.y2_test, self.x, self.y)

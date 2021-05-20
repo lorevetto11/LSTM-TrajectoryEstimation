@@ -5,6 +5,7 @@ import numpy as np
 import random 
 import sys
 import glob
+import time
 
 from Interpolation import interpolation
 from Dataset_Extract.Dataset import Dataset
@@ -12,7 +13,7 @@ from Predict import predict
 from Model.LSTM.TrainModel.LSTM_Model import LSTM_Model
 from Model.GRU.TrainModel.GRU_Model import GRU_Model
 
-Method = 4
+Method = 2
 
 ideal_line = False
 
@@ -53,8 +54,13 @@ if __name__ == '__main__':
 
 
     elif(Method == 2):
-        lstm_mod.train_model_one_array(X, Y)
-        predict.test_predict_trajectory_OneArray()
+        #lstm_mod.train_model_one_array(X, Y)
+        for i in range(0, 10):
+            start = time.time()
+            predict.test_predict_trajectory_OneArray()
+            end = time.time()
+            with open("Timing/LSTM/OneLayer.txt", 'a') as f:
+                f.write(str(end - start) + "\n")
 
     elif(Method == 3):
         lstm_mod.train_model_multi_layer(X, Y)
@@ -62,6 +68,10 @@ if __name__ == '__main__':
 
     elif(Method == 4):
         gru_mod.train_model_one_array(X, Y)
+        predict.test_predict_trajectory_OneArray()
+
+    elif(Method == 5):
+        gru_mod.train_model_multi_layer(X, Y)
         predict.test_predict_trajectory_OneArray()
 
     else:
