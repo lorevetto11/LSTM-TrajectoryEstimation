@@ -12,11 +12,11 @@ class Plotting:
         plt.show()
 
     def track_margin_left(self, x, y):
-        plt.plot(x, y, "bs", linewidth=0.01)
+        plt.plot(x, y, color='green', marker='o', linestyle='dashed', linewidth=2, markersize=1)
 
     def track_margin_right(self, x, y):
-        plt.plot(x, y, "gs", linewidth=0.01)
+        plt.plot(x, y, color='blue', marker='o', linestyle='dashed', linewidth=2, markersize=2)
 
     def trajectory_coordinates(self, x, y):
-        plt.plot(x, y, "rs", linewidth=0.01)
+        plt.plot(x, y, color='red', marker='o', linestyle='dashed', linewidth=2, markersize=2)
 

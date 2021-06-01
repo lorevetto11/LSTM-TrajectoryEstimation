@@ -16,7 +16,8 @@ class LSTM_Model:
         for f, g in zip(X, Y):
             self.model.fit(f, g, epochs=100, validation_split=0.1, verbose=1)
 
-        self.model.save('Model/LSTM/Saved/OneLayer.h5')
+        #self.model.save('Model/LSTM/Saved/MultiLayer_FullDataset.h5')
+        self.model.save('Model/LSTM/Saved/TEST.h5')
 
 
     def train_model_basic(self, X, Y):
@@ -43,7 +44,19 @@ class LSTM_Model:
         for f, g in zip(X, Y):
             self.model.fit(f, g, epochs=100, validation_split=0.1, verbose=1)
 
-        self.model.save('Model/LSTM/Saved/MultiLayer.h5')
+        self.model.save('Model/LSTM/Saved/TEST2.h5')
+
+    def train_model_step_array(self, X, Y):
+        self.model.add(layers.LSTM(128, activation='relu', input_shape=(10, 4)))
+        self.model.add(layers.Dense(20))
+        self.model.compile(optimizer='adam', loss='mse')
+
+        print(self.model.summary(90))
+
+        for f, g in zip(X, Y):
+            self.model.fit(f, g, epochs=100, validation_split=0.1, verbose=1)
+
+        self.model.save('Model/LSTM/Saved/MultiStep_OneLayer.h5')
 
     def export_model(self):
         return self.model

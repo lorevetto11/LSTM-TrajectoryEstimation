@@ -13,7 +13,7 @@ from Predict import predict
 from Model.LSTM.TrainModel.LSTM_Model import LSTM_Model
 from Model.GRU.TrainModel.GRU_Model import GRU_Model
 
-Method = 2
+Method = 3
 
 ideal_line = False
 
@@ -35,15 +35,19 @@ if __name__ == '__main__':
     gru_mod = GRU_Model()
 
     if(ideal_line):
-        dataset.extract_F1_dataset_idealline()
+        dataset.extract_F1_dataset_IdealLine()
         dataset.reshape_multi_array()
         X, Y = dataset.get_dataset()
 
     else:
-        #dataset.extract_AC_dataset()
-        dataset.extract_F1_dataset()
+        
+        dataset.extract_AC_dataset()
+        #dataset.extract_F1_dataset()
+        dataset.extract_MOD_dataset()
         dataset.extract_center_trajectory()
-        #dataset.reshape_multi_array()
+
+        dataset.extract_F1_dataset_IdealLine()
+        
         dataset.reshape_one_array()
         X, Y = dataset.get_dataset()
 
@@ -52,15 +56,9 @@ if __name__ == '__main__':
         lstm_mod.train_model_basic(X, Y)
         predict.test_predict_trajectory_OneArray()
 
-
     elif(Method == 2):
         #lstm_mod.train_model_one_array(X, Y)
-        for i in range(0, 10):
-            start = time.time()
-            predict.test_predict_trajectory_OneArray()
-            end = time.time()
-            with open("Timing/GRU/AllTrack/MultiLayer.txt", 'a') as f:
-                f.write(str(end - start) + "\n")
+        predict.test_predict_trajectory_OneArray()
 
     elif(Method == 3):
         lstm_mod.train_model_multi_layer(X, Y)
@@ -73,6 +71,10 @@ if __name__ == '__main__':
     elif(Method == 5):
         gru_mod.train_model_multi_layer(X, Y)
         predict.test_predict_trajectory_OneArray()
+
+    elif(Method == 6):
+        lstm_mod.train_model_multi_layer(X, Y)
+        predict.test_predict_trajectory_StepArray()
 
     else:
         predict.test_predict_trajectory_OneArray()

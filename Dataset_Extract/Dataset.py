@@ -1,5 +1,7 @@
 import numpy as np
 import glob
+import json
+import os
 from Interpolation import interpolation
 
 class Dataset:
@@ -10,6 +12,7 @@ class Dataset:
         self.dataset_files2 = []
         self.dataset_files3 = []
         self.dataset_files_tra = []
+        self.mod_dataset = []
 
         self.x1, self.x2, self.y1, self.y2, self.x_goal, self.y_goal = [], [], [], [], [], []
         self.x1_test, self.x2_test, self.y1_test, self.y2_test = [], [], [], []
@@ -20,7 +23,10 @@ class Dataset:
 
         self.tmp_x, self.tmp_y = [], []
 
-    def extract_F1_dataset_idealline(self):
+        self.test, self.test2, self.test3, self.test4 = [], [], [], []
+
+    def extract_F1_dataset_IdealLine(self):
+
         for document in glob.glob('F1_Dataset/*_track.csv'):
             self.dataset_files.append(document)
 
@@ -33,8 +39,8 @@ class Dataset:
 
             mod = int(len(csv_data_temp) / 10)
 
-            interp_track_left = self.interpolation.interpolate_polyline(csv_data_temp[:, 0], csv_data_temp[:, 1], mod*10)
-            interp_track_right = self.interpolation.interpolate_polyline(csv_data_temp[:, 2], csv_data_temp[:, 3], mod*10)
+            interp_track_left = self.interpolation.interpolate_polyline(csv_data_temp[:, 0], csv_data_temp[:, 1], int(len(csv_data_temp2)))
+            interp_track_right = self.interpolation.interpolate_polyline(csv_data_temp[:, 2], csv_data_temp[:, 3], int(len(csv_data_temp2)))
 
 
             self.x1.append(interp_track_left[:, 0])
@@ -45,8 +51,8 @@ class Dataset:
             self.x_goal.append(csv_data_temp2[:, 0])
             self.y_goal.append(csv_data_temp2[:, 1])
 
-            #self.data_augmentation(csv_data_temp[:, 0], csv_data_temp[:, 1], csv_data_temp[:, 2], 
-                #csv_data_temp[:, 3], csv_data_temp2[:, 0], csv_data_temp2[:, 1])
+            self.data_augmentation(interp_track_left[:, 0], interp_track_left[:, 1], interp_track_right[:, 0], 
+                interp_track_right[:, 1], csv_data_temp2[:, 0], csv_data_temp2[:, 1])
 
     def extract_F1_dataset(self):
 
@@ -60,12 +66,6 @@ class Dataset:
             csv_data_temp = np.loadtxt(file, comments='#', delimiter=',')
             csv_data_temp2 = np.loadtxt(file1, comments='#', delimiter=',')
 
-            #mod = int(len(csv_data_temp) / 10)
-
-            #interp_track_left = self.interpolation.interpolate_polyline(csv_data_temp[:, 0], csv_data_temp[:, 1], mod*10)
-            #interp_track_right = self.interpolation.interpolate_polyline(csv_data_temp[:, 2], csv_data_temp[:, 3], mod*10)
-
-
             self.x1.append(csv_data_temp[:, 0])
             self.y1.append(csv_data_temp[:, 1])
             self.x2.append(csv_data_temp[:, 2])
@@ -76,6 +76,42 @@ class Dataset:
 
             #self.data_augmentation(interp_track_left[:, 0], interp_track_left[:, 1], interp_track_right[:, 0], 
                 #interp_track_right[:, 1], csv_data_temp2[:, 0], csv_data_temp2[:, 1])
+
+    def extract_MOD_dataset(self):
+
+        for document2 in glob.glob('Mod_Dataset/*.json'):
+            self.mod_dataset.append(document2)
+
+        for l in self.mod_dataset:
+            print(l)
+            with open(l) as json_file:
+                data = json.load(json_file)
+                inner = data["inner"]
+                outer = data["outer"]
+                for i in inner:
+                    self.test.append(i[0])
+                self.test = np.array(self.test)
+                self.x1.append(self.test)
+                self.test = []
+            
+                for i in inner:
+                    self.test2.append(i[1])
+                self.test2 = np.array(self.test2)
+                self.y1.append(self.test2)
+                self.test2 = []
+
+                for i in outer:
+                    self.test3.append(i[0])
+                self.test3 = np.array(self.test3)
+                self.x2.append(self.test3)
+                self.test3 = []
+
+                for i in outer:
+                    self.test4.append(i[1])
+                self.test4 = np.array(self.test4)
+                self.y2.append(self.test4)
+                self.test4 = []
+        
             
     def extract_AC_dataset(self):
         for document2 in glob.glob('AC_Dataset/*_side_l.csv'):
@@ -194,8 +230,8 @@ class Dataset:
         self.x2.append(tmp_x2)
         self.y2.append(tmp_y2)
 
-        #self.x_goal.append(tmp_xg)
-        #self.y_goal.append(tmp_yg)
+        self.x_goal.append(tmp_xg)
+        self.y_goal.append(tmp_yg)
 
         '''
         Flip V 
@@ -205,8 +241,8 @@ class Dataset:
         self.x2.append(tmp_x2)
         self.y2.append(y2)
 
-        #self.x_goal.append(tmp_xg)
-        #self.y_goal.append(yg)
+        self.x_goal.append(tmp_xg)
+        self.y_goal.append(yg)
 
         '''
         Flip O
@@ -216,5 +252,5 @@ class Dataset:
         self.x2.append(x2)
         self.y2.append(tmp_y2)
 
-        #self.x_goal.append(xg)
-        #self.y_goal.append(tmp_yg)
+        self.x_goal.append(xg)
+        self.y_goal.append(tmp_yg)
