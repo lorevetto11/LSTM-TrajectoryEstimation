@@ -41,10 +41,14 @@ class LSTM_Model:
 
         print(self.model.summary(90))
 
+        i = 0
+
         for f, g in zip(X, Y):
             self.model.fit(f, g, epochs=100, validation_split=0.1, verbose=1)
+            print(i)
+            i = i+1
 
-        self.model.save('Model/LSTM/Saved/TEST2.h5')
+        self.model.save('Model/LSTM/Saved/TEST4.h5')
 
     def train_model_step_array(self, X, Y):
         self.model.add(layers.LSTM(128, activation='relu', input_shape=(10, 4)))

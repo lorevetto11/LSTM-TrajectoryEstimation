@@ -2,6 +2,9 @@ import numpy as np
 import glob
 import json
 import os
+import math
+import matplotlib.pyplot as plt
+
 from Interpolation import interpolation
 
 class Dataset:
@@ -24,6 +27,8 @@ class Dataset:
         self.tmp_x, self.tmp_y = [], []
 
         self.test, self.test2, self.test3, self.test4 = [], [], [], []
+        
+        self.points = []
 
     def extract_F1_dataset_IdealLine(self):
 
@@ -52,6 +57,9 @@ class Dataset:
             self.y_goal.append(csv_data_temp2[:, 1])
 
             self.data_augmentation(interp_track_left[:, 0], interp_track_left[:, 1], interp_track_right[:, 0], 
+                interp_track_right[:, 1], csv_data_temp2[:, 0], csv_data_temp2[:, 1])
+
+            self.rotate_circuit(interp_track_left[:, 0], interp_track_left[:, 1], interp_track_right[:, 0], 
                 interp_track_right[:, 1], csv_data_temp2[:, 0], csv_data_temp2[:, 1])
 
     def extract_F1_dataset(self):
@@ -88,28 +96,34 @@ class Dataset:
                 data = json.load(json_file)
                 inner = data["inner"]
                 outer = data["outer"]
+
                 for i in inner:
                     self.test.append(i[0])
                 self.test = np.array(self.test)
-                self.x1.append(self.test)
-                self.test = []
             
                 for i in inner:
                     self.test2.append(i[1])
                 self.test2 = np.array(self.test2)
-                self.y1.append(self.test2)
-                self.test2 = []
 
                 for i in outer:
                     self.test3.append(i[0])
                 self.test3 = np.array(self.test3)
-                self.x2.append(self.test3)
-                self.test3 = []
 
                 for i in outer:
                     self.test4.append(i[1])
                 self.test4 = np.array(self.test4)
-                self.y2.append(self.test4)
+
+                interp_track_left = self.interpolation.interpolate_polyline(self.test, self.test2, int(len(self.test3)))
+                interp_track_right = self.interpolation.interpolate_polyline(self.test3, self.test4, int(len(interp_track_left)))
+
+                self.x1.append(interp_track_left[:, 0])
+                self.y1.append(interp_track_left[:, 1])
+                self.x2.append(interp_track_right[:, 0])
+                self.y2.append(interp_track_right[:, 1])
+
+                self.test = []
+                self.test2 = []
+                self.test3 = []
                 self.test4 = []
         
             
@@ -139,8 +153,8 @@ class Dataset:
                     self.x2.append(interp_path_right[:, 0])
                     self.y2.append(interp_path_right[:, 1])
 
-                    self.data_augmentation(interp_path_left[:, 0], interp_path_left[:, 1], interp_path_right[:, 0], 
-                        interp_path_right[:, 1], csv_data_temp2[:, 0], csv_data_temp2[:, 1])
+                    #self.data_augmentation(interp_path_left[:, 0], interp_path_left[:, 1], interp_path_right[:, 0], 
+                        #interp_path_right[:, 1], csv_data_temp2[:, 0], csv_data_temp2[:, 1])
 
                 else:
                     mod = int(len(csv_data_temp2[:, 0])/10)
@@ -154,8 +168,8 @@ class Dataset:
                     self.x2.append(interp_path_right[:, 0])
                     self.y2.append(interp_path_right[:, 1])
 
-                    self.data_augmentation(interp_path_left[:, 0], interp_path_left[:, 1], interp_path_right[:, 0], 
-                        interp_path_right[:, 1], csv_data_temp2[:, 0], csv_data_temp2[:, 1])
+                    #self.data_augmentation(interp_path_left[:, 0], interp_path_left[:, 1], interp_path_right[:, 0], 
+                        #interp_path_right[:, 1], csv_data_temp2[:, 0], csv_data_temp2[:, 1])
          
     def extract_center_trajectory(self):
         for i in range(0, len(self.x1)):
@@ -254,3 +268,35 @@ class Dataset:
 
         self.x_goal.append(xg)
         self.y_goal.append(tmp_yg)
+
+    def rotate(self, origin, x, y, angle):
+        """
+        Rotate a point counterclockwise by a given angle around a given origin.
+
+        The angle should be given in radians.
+        """
+        ox, oy = origin
+        px, py = x, y
+
+        qx = ox + math.cos(angle) * (px - ox) - math.sin(angle) * (py - oy)
+        qy = oy + math.sin(angle) * (px - ox) + math.cos(angle) * (py - oy)
+
+        return qx, qy
+
+    def rotate_circuit(self, x1, y1, x2, y2, x_goal, y_goal):
+        median = [(max(x1)+min(x1))//2, (max(y1)+min(y1))//2]
+
+        for i in range(10, 360, 10):
+            point = self.rotate(median, x1, y1, math.radians(i))
+            self.x1.append(point[0])
+            self.y1.append(point[1])
+
+            point = self.rotate(median, x2, y2, math.radians(i))
+            self.x2.append(point[0])
+            self.y2.append(point[1])
+
+            point = self.rotate(median, x_goal, y_goal, math.radians(i))
+            self.x_goal.append(point[0])
+            self.y_goal.append(point[1])
+
+        
