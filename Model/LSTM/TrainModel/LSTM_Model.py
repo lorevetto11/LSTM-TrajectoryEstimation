@@ -17,7 +17,7 @@ class LSTM_Model:
             self.model.fit(f, g, epochs=100, validation_split=0.1, verbose=1)
 
         #self.model.save('Model/LSTM/Saved/MultiLayer_FullDataset.h5')
-        self.model.save('Model/LSTM/Saved/TEST.h5')
+        self.model.save('Model/LSTM/Saved/TEST6.h5')
 
 
     def train_model_basic(self, X, Y):
@@ -48,7 +48,7 @@ class LSTM_Model:
             print(i)
             i = i+1
 
-        self.model.save('Model/LSTM/Saved/TEST4.h5')
+        self.model.save('Model/LSTM/Saved/TEST8.h5')
 
     def train_model_step_array(self, X, Y):
         self.model.add(layers.LSTM(128, activation='relu', input_shape=(10, 4)))

@@ -20,7 +20,7 @@ class Predict:
 
     def test_predict_trajectory_OneArray(self):
 
-        model = load_model('Model/LSTM/Saved/TEST4.h5')
+        model = load_model('Model/LSTM/Saved/TEST8.h5')
 
         for document in glob.glob('Predict/Track/*.csv'):
             self.track_files.append(document)
