@@ -56,11 +56,11 @@ class Dataset:
             self.x_goal.append(csv_data_temp2[:, 0])
             self.y_goal.append(csv_data_temp2[:, 1])
 
-            #self.data_augmentation(interp_track_left[:, 0], interp_track_left[:, 1], interp_track_right[:, 0], 
-                #interp_track_right[:, 1], csv_data_temp2[:, 0], csv_data_temp2[:, 1])
+            self.data_augmentation(interp_track_left[:, 0], interp_track_left[:, 1], interp_track_right[:, 0], 
+                interp_track_right[:, 1], csv_data_temp2[:, 0], csv_data_temp2[:, 1])
 
-            #self.rotate_circuit(interp_track_left[:, 0], interp_track_left[:, 1], interp_track_right[:, 0], 
-                #interp_track_right[:, 1], csv_data_temp2[:, 0], csv_data_temp2[:, 1])
+            self.rotate_circuit(interp_track_left[:, 0], interp_track_left[:, 1], interp_track_right[:, 0], 
+                interp_track_right[:, 1], csv_data_temp2[:, 0], csv_data_temp2[:, 1])
 
     def extract_F1_dataset(self):
 

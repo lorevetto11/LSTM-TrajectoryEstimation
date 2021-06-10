@@ -1,0 +1,5 @@
+TEST --> one layer, 2 circuit, rotate
+TEST1 --> multi layer, 2 circuit, rotate
+TEST2 --> one layer, all F1 circuit
+NOWBEST --> one layer. 2 circuit
+Bidirectional one Layer --> one layer, Only F1 circuit, rotate, flip
