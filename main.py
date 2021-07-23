@@ -41,10 +41,10 @@ if __name__ == '__main__':
 
     else:
         
-        #dataset.extract_AC_dataset()
+        dataset.extract_AC_dataset()
         #dataset.extract_F1_dataset()
         #dataset.extract_MOD_dataset()
-        #dataset.extract_center_trajectory()
+        dataset.extract_center_trajectory()
 
         dataset.extract_F1_dataset_IdealLine()
         
@@ -61,7 +61,7 @@ if __name__ == '__main__':
         predict.test_predict_trajectory_OneArray()
 
     elif(Method == 3):
-        #lstm_mod.train_model_multi_layer(X, Y)
+        lstm_mod.train_model_multi_layer(X, Y)
         predict.test_predict_trajectory_OneArray()
 
     elif(Method == 4):
@@ -77,11 +77,12 @@ if __name__ == '__main__':
         predict.test_predict_trajectory_StepArray()
 
     elif(Method == 7):
-        #lstm_mod.train_model_bidirectional_lstm_one_layer(X, Y)
+        lstm_mod.train_model_bidirectional_lstm_one_layer(X, Y)
         predict.test_predict_trajectory_OneArray()
 
     elif(Method == 8):
-        lstm_mod.train_model_bidirectional_lstm_multi_layer(X, Y)
+        gru_mod.train_model_bidirectional_gru_one_layer(X, Y)
         predict.test_predict_trajectory_OneArray()
+
     else:
         predict.test_predict_trajectory_OneArray()

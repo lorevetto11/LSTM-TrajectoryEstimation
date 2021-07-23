@@ -42,25 +42,25 @@ class Dataset:
             csv_data_temp = np.loadtxt(file, comments='#', delimiter=',')
             csv_data_temp2 = np.loadtxt(file1, comments='#', delimiter=',')
 
-            mod = int(len(csv_data_temp) / 10)
+            #mod = int(len(csv_data_temp) / 10)
 
-            interp_track_left = self.interpolation.interpolate_polyline(csv_data_temp[:, 0], csv_data_temp[:, 1], int(len(csv_data_temp2)))
-            interp_track_right = self.interpolation.interpolate_polyline(csv_data_temp[:, 2], csv_data_temp[:, 3], int(len(csv_data_temp2)))
+            #interp_track_left = self.interpolation.interpolate_polyline(csv_data_temp[:, 0], csv_data_temp[:, 1], int(len(csv_data_temp2)))
+            #interp_track_right = self.interpolation.interpolate_polyline(csv_data_temp[:, 2], csv_data_temp[:, 3], int(len(csv_data_temp2)))
 
 
-            self.x1.append(interp_track_left[:, 0])
-            self.y1.append(interp_track_left[:, 1])
-            self.x2.append(interp_track_right[:, 0])
-            self.y2.append(interp_track_right[:, 1])
+            self.x1.append(csv_data_temp[:, 0])
+            self.y1.append(csv_data_temp[:, 1])
+            self.x2.append(csv_data_temp[:, 2])
+            self.y2.append(csv_data_temp[:, 3])
 
             self.x_goal.append(csv_data_temp2[:, 0])
             self.y_goal.append(csv_data_temp2[:, 1])
 
-            self.data_augmentation(interp_track_left[:, 0], interp_track_left[:, 1], interp_track_right[:, 0], 
-                interp_track_right[:, 1], csv_data_temp2[:, 0], csv_data_temp2[:, 1])
+            #self.data_augmentation(interp_track_left[:, 0], interp_track_left[:, 1], interp_track_right[:, 0], 
+                #interp_track_right[:, 1], csv_data_temp2[:, 0], csv_data_temp2[:, 1])
 
-            self.rotate_circuit(interp_track_left[:, 0], interp_track_left[:, 1], interp_track_right[:, 0], 
-                interp_track_right[:, 1], csv_data_temp2[:, 0], csv_data_temp2[:, 1])
+            self.rotate_circuit(csv_data_temp[:, 0], csv_data_temp[:, 1], csv_data_temp[:, 2], 
+                csv_data_temp[:, 3], csv_data_temp2[:, 0], csv_data_temp2[:, 1])
 
     def extract_F1_dataset(self):
 
@@ -285,7 +285,7 @@ class Dataset:
 
     def rotate_circuit(self, x1, y1, x2, y2, x_goal, y_goal):
         median = [(max(x1)+min(x1))//2, (max(y1)+min(y1))//2]
-
+        
         for i in range(10, 360, 10):
             point = self.rotate(median, x1, y1, math.radians(i))
             self.x1.append(point[0])
